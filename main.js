@@ -423,7 +423,7 @@ let musicComponent = `
                   </select>
                 </center>
               </div>
-  </div>
+  </div><br>
             <center>
               <audio id="sound-control" controls>
                 <source src="#" type="audio/wav">
