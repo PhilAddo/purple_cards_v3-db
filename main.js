@@ -982,7 +982,7 @@ If you wish to make further changes, click <b>Edit</b>.</p>
   const id = data[0].id;
   cardID = id;
 
-  const shareLink = `file:///C:/Users/user/Desktop/Folders%20and%20Docs/WEB_PROJECTS/purple_cards_v3%20-%20db/viewCard.html?id=${id}`;
+  const shareLink = `${window.location.origin}/viewCard.html?id=${id}`;
   //const shareLink = `${window.location.origin}/viewCard.html?id=${id}`;
 
   cardLink.innerHTML =
@@ -1007,7 +1007,7 @@ If you wish to make further changes, click <b>Edit</b>.</p>
 
 function viewCard(id) {
   hidePopUpMessage();
-  window.location.href = `file:///C:/Users/user/Desktop/Folders%20and%20Docs/WEB_PROJECTS/purple_cards_v3%20-%20db/viewCard.html?id=${id}`;
+  window.location.href = `${window.location.origin}/viewCard.html?id=${id}`;
 }
 //replaces &quot; with quote(')
 function replaceQuote(value) {

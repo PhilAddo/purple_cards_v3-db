@@ -279,7 +279,7 @@
         switchBtn = document.getElementById("switch-btn");
         bgSound = document.getElementById("bg-sound");
 
-        let cardLink = document.getElementById("card-link").innerHTML = `file:///C:/Users/user/Desktop/Folders%20and%20Docs/WEB_PROJECTS/purple_cards_v3%20-%20db/viewCard.html?id=${id}`
+        let cardLink = document.getElementById("card-link").innerHTML = `${window.location.origin}/viewCard.html?id=${id}`
         switchBtn.addEventListener("click", playBgSound);
         adjustPopOutEmoji(); captureMessage(); selectShareBtn();
     }
