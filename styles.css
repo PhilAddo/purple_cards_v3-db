@@ -1,0 +1,449 @@
+
+
+#page-bg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-color: purple;
+  opacity: 0.3;
+}
+
+#logoCon{
+  border: 0px solid black;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  }
+  
+  #logo{
+  width:100px;
+  height:100px;
+  margin: 0px;
+  position: relative;
+  margin-top: -37px;
+  }
+
+  .logo-text{
+    font-family: 'Brush Script MT', cursive;
+    color: purple;
+    }
+
+.design{
+    /*font-size: 22px; default*/
+    font-size: 20px;
+    }
+    
+    #flip-card{
+    background-color: transparent;
+    width: 300px;
+    height: 400px;
+    perspective: 1000px;
+    }
+    
+    #flip-card-inner{
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 1.5s;
+      transform-style: preserve-3d;
+      box-shadow:0px 4px 8px black;
+      border-radius: 5px;
+    }
+    
+    /* Do an horizontal flip when you move the mouse over the flip box container */
+    /*
+    #flip-card:hover #flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    */
+    
+    /* Position the front and back side */
+    #flip-card-front, #flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden; /* Safari */
+      backface-visibility: hidden;
+      border-radius: 5px;
+    }
+    
+    #flip-card-front {
+    /*adds background image*/
+      background-image: url('');
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: center;
+    /*----*/
+      background-size: 500px 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-wrap: wrap;
+      border: 1px solid black;
+      font-size: 20px;
+      text-align: center;
+      overflow: hidden;
+      background-color: purple;
+      color:white;
+    }
+    
+    /* Style the back side */
+    #flip-card-back {
+      background-color: dodgerblue;
+      color: white;
+      transform: rotateY(180deg);
+    }
+    
+    #title-text{
+        text-wrap: wrap;
+        padding: 5px;
+        }
+        
+    #front-bg{
+        padding: 3px;
+        border-radius: 5px;
+        background: rgba(0, 0, 0, 0.6);
+        width: 80%;
+        }
+
+    #message-bg{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 300px;
+    height: 400px;
+    position: relative;
+    }
+    
+    #message-text{
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    width: 80%;
+    padding: 5px;
+    color: white;
+    z-index: 1;
+    }
+    
+    
+
+    .btn {
+        border: 2.5px solid black;
+        width:70px;
+        text-align:center;
+        font-size: 15px;
+        color:white;
+        background-color: black;
+        border-radius:30px;
+        padding:15px;
+        animation-name:btnAnim;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        }
+
+     @keyframes btnAnim{
+            50% {border:2.5px solid gray;}
+            }
+
+    #card{
+      /*adds background image*/
+      background-image: ;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: center;
+    /*----*/
+      background-size: 500px 400px;
+      background-color: purple;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid black;
+      width: 300px;
+      height: 400px;
+      box-shadow:0px 4px 8px black;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    #blur-element{
+      opacity: 0;
+      position: absolute;
+      width: 300px;
+      height: 400px;
+      border-radius: 5px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    #pop-out-emoji{
+      position: absolute;
+      z-index: 1;
+      left: 2%;
+      top: 0px;
+      font-size: 70px;
+      animation: popOutEmojiAnim 2s;
+    }
+
+    #card-title-bg{
+      padding: 3px;
+      position: absolute;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.6);
+      width: 250px;
+    }
+
+    #card-title{
+      font-size: 30px;
+      color: white;
+    }
+
+    #card-message-bg{
+      position: relative;
+      top: 100px;
+      display: none;
+      background-color: white;
+      width: 250px;
+      max-height: 330px;
+      border-radius: 5px;
+      font-size: 18px;
+      padding: 3px;
+      overflow: scroll;
+      /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+    }
+
+    #cursor{
+      animation: blinkingAnim 1s infinite;
+    }
+
+    @keyframes blinkingAnim{
+      0% {opacity: 1;}
+      50% {opacity: 0;}
+      100% {opacity: 1;}
+    }
+
+    @keyframes showTitleAnim{
+      0% {opacity: 0;}
+      100% {opacity: 1;}
+      }
+
+      @keyframes hideTitleAnim{
+        0% {opacity: 1;}
+        100% {opacity: 0;}
+        }
+
+      @keyframes showMessageAnim{
+        0% {opacity: 0; top: 100px; display: block;}
+      100% {opacity: 1; top: 0px;}
+        }
+
+      @keyframes hideMessageAnim{
+        0% {opacity: 1; top: 0px;}
+      100% {opacity: 0; top: 100px; display: none;}
+      }
+
+      @keyframes hideBlur {
+        0% {opacity: 1;}
+        100% {opacity: 0;}
+      }
+
+      @keyframes showBlur {
+        0% {opacity: 0;}
+        100% {opacity: 1;}
+      }
+
+      @keyframes popOutEmojiAnim {
+        0% {transform: scaleX(0) scaleY(0);}
+        50% {transform: scaleX(1.5) scaleY(1.5);}
+        100% {transform: scaleX(1) scaleY(1);}
+      }
+    
+      #editing-elements{
+        background-color: white;
+        padding: 5px;
+        border-radius: 10px;
+      }
+
+.design-stage-content{
+border: 0.1px solid black;
+height: 60px;
+display: flex;
+justify-content: flex-start;
+align-items: center;
+flex-direction: row;
+overflow: hidden;
+border-radius: 10px;
+}
+
+.design-stage-content-label{
+display: flex;
+align-items: center;
+height: 30px;
+color: white;
+background-color: black;
+padding: 15px
+}
+
+.design-stage-elements-container{
+  display: flex;
+  overflow: scroll;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 95%;
+  padding: 5px;
+  background-color: lightgrey;
+}
+
+.font-text{
+  padding: 5px;
+  }
+
+.input-btn{
+width: 98%;
+padding: 7px;
+color: white;
+background-color: black;
+border-radius: 10px;
+font-size: 16px;
+}
+
+.inactive-btn{
+  width: 48%;
+  padding: 7px;
+  color: gray;
+  background: lightgrey;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.color-circle{
+  font-size: 50px;
+  }
+
+  .image-element{
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    }
+
+#text-box-container{
+  position: fixed;
+  z-index: 3;
+  top: 10%;
+  left: 11%;
+  background-color: white;
+  width: 75%;
+  height: 380px;
+  padding: 5px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+  }
+  
+  #text-input{
+  border: 0.5px solid black;
+  width: 250px;
+  height: 300px;
+  overflow: scroll;
+  }
+
+  .confirm-btn{
+  padding: 7px;
+  color: white;
+  background-color: black;
+  border-radius: 10px;
+  }
+  
+  #shaded-bg{
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border: 0.5px solid black;
+  width: 100%;
+  height: 1000px;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  }
+
+  #switch-btn{
+  border: 2.5px solid black;
+  width: 115px;
+  text-align:center;
+  font-size: 13px;
+  color:white;
+  background-color: black;
+  border-radius:30px;
+  padding:13px;
+  animation: switchBtnAnim 8s linear 0s infinite;
+  }
+
+  @keyframes switchBtnAnim{
+    10% {border:2.5px solid red;}
+    20% {border:2.5px solid orange;}
+    30% {border:2.5px solid yellow;}
+    40% {border:2.5px solid green;}
+    50% {border:2.5px solid blue;}
+    60% {border:2.5px solid indigo;}
+    70% {border:2.5px solid violet;}
+    80% {border:2.5px solid pink;}
+    90% {border:2.5px solid purple;}
+    100% {border:2.5px solid firebrick;}
+    //50% {border:2.5px solid yellow; box-shadow: 0px 1px 2px rgba(255, 255, 0, 1);}
+    }
+
+  .design-stage-controls-btn{
+  width: 48%;
+  padding: 7px;
+  color: white;
+  background-color: black;
+  border-radius: 10px;
+  font-size: 16px;
+  }
+
+  #pop-up-container{
+  position: fixed;
+  z-index: 3;
+  top: 15%;
+  left: 11%;
+  background-color: white;
+  width: 75%;
+  padding: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+  }
+
+  .card-controls-btn{
+    width: 100px;
+    padding: 8px;
+    border: none;
+    color: white;
+    background-color: black;
+    border-radius: 15px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+#page-footer{
+    background-color: white;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 10px;
+}

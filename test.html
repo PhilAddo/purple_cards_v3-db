@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css" />
+<meta name="Viewport" content="width=device-width, initial-scale=1" />
+<script src="main.js"></script>
+</head>
+<body>
+<center>
+<h3>Purple Cards</h3>
+
+<div id="doc-body">
+ <center>
+      <div id="card">
+        <div id="blur-element"></div>
+        <div id="pop-out-emoji" onclick="animatePopOutEmoji();">😊</div>
+        <h2 id="card-title-bg">
+          <div id="card-title" style="font-family: 'Brush Script MT', cursive;">Happy New Month of April</div>
+        </h2>
+        <div id="card-message-bg">
+          <span id="card-message">Message</span><span id="cursor">✍</span>
+        </div>
+      </div>
+      <br />
+
+      <input
+        type="button"
+        id="switch-btn"
+        value="View Message"
+        onclick="switchView()"
+      /><br><br>
+
+      <div id="card-controls">
+            <div
+              style="background-color: white; border-radius: 8px; padding: 5px"
+            >
+              <input type="button" value="Share" id="share-btn">
+              <br />
+            <span id="card-link"></span><br>
+              <small
+                ><i
+                  >Card created with
+                  <span class="logo-text">Purple Cards</span>.
+                  <a href="#" onclick="showInfo(event);">Learn more</a></i
+                ></small
+              >
+      </div>
+      
+      <audio id="bg-sound">
+        <source src="wedding-day.mp3" type="audio/mp3" />
+      </audio>
+    </center>
+</div>
+
+<input type="button" value="create file" onclick="createFile();"/><br><br>
+
+<input type="button" value="view card" onclick="viewCard();">
+</center>
+</body>
+<script>
+function generateRandomString(){
+const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+var randomString = null;
+randomString = "";
+
+
+for(i = 0; i < 5; i++){
+var val = Math.ceil(Math.random() * 2);
+if(val == 1){
+var letterInd = Math.ceil(Math.random() * 25);
+randomString += letters[letterInd];
+}
+else{
+var numberInd = Math.ceil(Math.random() * 9);
+randomString += numbers[numberInd];
+}
+}
+
+return randomString;
+}
+
+function createFile(){
+
+    var randomChars = generateRandomString();
+    const docName = `pcard-${randomChars}.txt`;
+    const cardLink = document.getElementById("card-link")
+    cardLink.innerHTML = `<a href="showCard.php?name=${docName}">showCard.php?name=${docName}</a>`;
+    const docBody = document.getElementById("doc-body").innerHTML;
+    let docBodyObj = {content: docBody};
+    docBodyObj = JSON.stringify(docBodyObj);
+    
+
+      fetch("createDoc.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+        body: `docBody=${docBodyObj}&docName=${docName}`,
+      })
+      .then((response) => response.text())
+      .then((res) => (alert(res)));
+       
+       //restoreProperties();
+       //callDel(docName);
+}
+
+function viewCard(){
+ let res = prompt("Enter card name");
+ if(res !== null || res !== ""){
+     window.location.href = `showCard.php?name=${res}`;
+ }
+}
+</script>
+</html>

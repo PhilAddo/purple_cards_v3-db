@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      href="https://fonts.googleapis.com/css?family=Caveat"
+      rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css" />
+    <title>Purple Card</title>
+</head>
+<body>
+ <div id="content-container">
+    <?php
+    // Check if 'name' parameter is set in the URL
+    if (isset($_GET['name'])) {
+        //checks if the card's file exists
+        $name = $_GET['name'];
+        if(file_exists('cards/'.$name)){
+          $read = file('cards/'.$name);
+          $content = $read[0];
+          $decodedContent = json_decode($content);
+          echo $decodedContent->content;
+        }
+        else{
+            echo 'Sorry, '.$name.' does not exist';
+        }
+    }
+    else{
+        echo "name not set";
+    }
+    ?>
+ </div>
+ <!-- pop-up container element -->
+      <div id="pop-up-container">
+
+      </div>
+
+      <!--shaded background element-->
+      <div id="shaded-bg"></div>
+</body>
+<script>
+let card = document.getElementById("card");
+let blurElement = document.getElementById("blur-element");
+let cardTitleBg = document.getElementById("card-title-bg");
+let cardMessageBg = document.getElementById("card-message-bg");
+let cardTitle = document.getElementById("card-title");
+let cardMessage = document.getElementById("card-message");
+let popOutEmoji = document.getElementById("pop-out-emoji");
+let cursor = document.getElementById("cursor");
+let switchBtn = document.getElementById("switch-btn");
+let bgSound = document.getElementById("bg-sound");
+let contentContainer = document.getElementById("content-container");
+
+//stores the state of the background sound element
+let soundState = "stopped";
+
+goToView = "message";
+let switchTimer;
+function switchView() {
+  clearTimeout(switchTimer);
+  clearInterval(printTimer);
+
+  if (goToView === "message") {
+    cardTitleBg.style.animation = "hideTitleAnim 1s";
+    cardMessageBg.style.animation = "showMessageAnim 1s";
+    blurElement.style.animation = "showBlur 1s";
+    goToView = "title";
+    cardMessageBg.style.display = "block";
+    switchBtn.value = "View Title";
+    switchTimer = setTimeout(() => {
+      cardTitleBg.style.opacity = 0;
+      cardMessageBg.style.opacity = 1;
+      cardMessageBg.style.top = "0px";
+      blurElement.style.opacity = 1;
+      printMessage();
+    }, 1000);
+  } else if (goToView === "title") {
+    cardTitleBg.style.animation = "showTitleAnim 1s";
+    cardMessageBg.style.animation = "hideMessageAnim 1s";
+    blurElement.style.animation = "hideBlur 1s";
+    goToView = "message";
+    switchBtn.value = "View Message";
+    switchTimer = setTimeout(() => {
+      cardTitleBg.style.opacity = 1;
+      cardMessageBg.style.opacity = 0;
+      cardMessageBg.style.display = "none";
+      blurElement.style.opacity = 0;
+    }, 1000);
+  }
+}
+
+function adjustPopOutEmoji() {
+  let card = document.getElementById("card");
+
+  let rect = card.getBoundingClientRect();
+  let x = rect.left - 45;
+  let y = rect.top - 45;
+
+  popOutEmoji.style.left = `${x}px`;
+  popOutEmoji.style.top = `${y}px`;
+}
+
+function animatePopOutEmoji() {
+  popOutEmoji.style.animation = "none";
+  setTimeout(() => {
+    popOutEmoji.style.animation = "popOutEmojiAnim 2s";
+  }, 100);
+}
+
+let message = `Message`;
+
+let printTimer;
+let messagePrinted = false;
+//Prints message only once
+function printMessage() {
+  let cardMessage2 = document.getElementById("card-message");
+  if (messagePrinted === false) {
+    cardMessage2.innerHTML = "";
+    let charIndex = 0;
+    clearInterval(printTimer);
+
+    printTimer = setInterval(print, 50);
+
+    function print() {
+      if (charIndex < message.length) {
+        if (message[charIndex] == "\n") {
+          cardMessage2.innerHTML += "<br>";
+          charIndex++;
+        } else {
+          cardMessage2.innerHTML += message[charIndex];
+          charIndex++;
+        }
+      } else {
+        clearInterval(printTimer);
+        messagePrinted = true;
+      }
+    }
+  } else {
+    cardMessage2 = message;
+  }
+}
+
+//plays the sound in the background
+function playBgSound() {
+  if (soundState == "stopped" && bgSound.source !== "") {
+    soundState = "playing";
+    bgSound.currentTime = 0;
+    bgSound.play();
+  }
+    switchBtn.style.animation = "none";
+    switchBtn.style.border = "2.5px solid gray";
+}
+
+switchBtn.addEventListener("click", playBgSound);
+
+//stores message content into message variable
+function captureMessage(){
+    message = cardMessage.innerHTML;
+    cardMessage.innerHTML = "";
+    //applies animation to switch button
+    switchBtn.style.animation = "switchBtnAnim 8s linear 0s infinite";
+}
+
+function editCard(){
+    cardMessage.innerHTML = message;
+    goToView = "title";
+    switchView();
+    //creates an object with the card content, converts it to a string and saves it to sessionStorage
+    let cardContent = replaceQuote(contentContainer.innerHTML);
+    let cardObj = {
+        content: cardContent
+    }
+    sessionStorage.setItem("storedCard", JSON.stringify(cardObj));
+    window.location.href = "main.html";
+}
+
+document.getElementById('share-btn').addEventListener('click', function() {
+    // Share functionality code goes here
+    // For example, you can use the Web Share API to share content
+    let cardTitle = document.getElementById("card-title").innerHTML;
+    let pageLink = window.location.href;
+    if (navigator.share) {
+        navigator.share({
+            title: cardTitle,
+            text: 'Click to view messsage',
+            url:  window.location.href,
+        })
+        .then(() => console.log('Shared successfully'))
+        .catch((error) => console.error('Error sharing:', error));
+    } else {
+        // Fallback code for browsers that do not support the Web Share API
+        showPopUpMessage(`<b>Error</b>
+        <p>Web Share API not supported. Please copy and share the card link instead.</p>
+        <input type="button" class="design-stage-controls-btn" onclick="hidePopUpMessage();" value="Okay">
+        `);
+    }
+});
+
+function replaceQuote(value){
+    let newValue = "";
+    for(i = 0; i < value.length; i++){
+        if(value[i] === "&" && value[i+1] === "q" && value[i+2] === "u" && value[i+3] === "o" && value[i+4] === "t" && value[i+5] === ";"){
+            newValue += "'";
+            i += 5;
+        }else{
+            newValue += value[i];
+        }
+    }
+    return newValue;
+}
+
+function showPopUpMessage(message) {
+  let screenHeight = window.screen.height;
+  let popUpContainer = document.getElementById("pop-up-container");
+  let shadedBg = document.getElementById("shaded-bg");
+  popUpContainer.style.display = "flex";
+  shadedBg.style.height = `${screenHeight}px`;
+  shadedBg.style.display = "block";
+
+  popUpContainer.innerHTML = message;
+}
+function hidePopUpMessage() {
+  let popUpContainer = document.getElementById("pop-up-container");
+  let shadedBg = document.getElementById("shaded-bg")
+  popUpContainer.style.display = "none";
+  shadedBg.style.display = "none";
+}
+
+function showAbout(){
+    showPopUpMessage(`<b>About</b>
+<p>Purple Cards allows you to create and share beautiful animated messages
+ which can be viewed in a web browser.</p>
+<p>Create yours today!</p>
+<input type="button" class="design-stage-controls-btn" onclick="hidePopUpMessage();" value="Okay">
+`);
+}
+
+onload = adjustPopOutEmoji(); captureMessage();
+
+</script>
+</html>
