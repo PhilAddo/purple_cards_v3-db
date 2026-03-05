@@ -353,6 +353,12 @@ let fontComponent = `
                 id="font5"
                 >Caveat</span
               >
+              <span
+                class="font-text"
+                style="font-family: Montserrat, sans-serif"
+                id="font6"
+                >Montserrat</span
+              >
             </div>
           </div>`;
 
@@ -401,6 +407,7 @@ let imagesComponent = `
 <img src="images/bday_cake_pic.jpg" alt="bday_cake_pic" class="image-element" id="pic5">
 <img src="images/flower_pic.jpg" alt="flower_pic" class="image-element" id="pic6">
 <img src="images/cherry-blossom_pic.jpg" alt="cherry-blossom_pic" class="image-element" id="pic7">
+<img src="images/gh_independence_arch_pic.jpg" alt="gh_independence_arch_pic_pic" class="image-element" id="pic8">
 </div>
 </div>`;
 
@@ -420,6 +427,7 @@ let musicComponent = `
                     <option>happy-birthday-to-you-bnsa.mp3</option>
                     <option>happy-15th-birthday.mp3</option>
                     <option>inspired-ambient-141686.mp3</option>
+                    <option>Ghana_-_National_Anthem_(mp3.pm).mp3</option>
                   </select>
                 </center>
               </div>
@@ -469,6 +477,13 @@ function getFonts() {
       currentStage == "titleText"
         ? (cardTitle.style.fontFamily = "Caveat,serif")
         : (cardMessage.style.fontFamily = "Caveat,serif");
+    });
+  const font6 = document
+    .getElementById("font6")
+    .addEventListener("click", function () {
+      currentStage == "titleText"
+        ? (cardTitle.style.fontFamily = "Montserrat, sans-serif")
+        : (cardMessage.style.fontFamily = "Montserrat, sans-serif");
     });
 }
 // getFonts();
@@ -678,6 +693,12 @@ function getImages() {
     .getElementById("pic7")
     .addEventListener("click", function () {
       card.style.backgroundImage = "url('images/cherry-blossom_pic.jpg')";
+      pageBg.style.background = "";
+    });
+  const pic8 = document
+    .getElementById("pic8")
+    .addEventListener("click", function () {
+      card.style.backgroundImage = "url('images/gh_independence_arch_pic.jpg')";
       pageBg.style.background = "";
     });
 
