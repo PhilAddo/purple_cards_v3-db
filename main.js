@@ -842,6 +842,7 @@ function changeStage() {
         ${musicComponent}<br>
         `;
       testing = true;
+      clearInterval(spawnTimer);
       showSelectedMusic();
       break;
 
