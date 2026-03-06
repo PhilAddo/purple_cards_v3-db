@@ -22,7 +22,6 @@ const supabaseUrl = "https://dbhorszzqrczhjfamjse.supabase.co";
 const supabaseKey = "sb_publishable_TtSyiux-4M6IgIj27VZC8Q_N_Wz1Xwl";
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-
 let card = document.getElementById("card");
 let blurElement = document.getElementById("blur-element");
 let cardTitleBg = document.getElementById("card-title-bg");
@@ -30,6 +29,7 @@ let cardMessageBg = document.getElementById("card-message-bg");
 let cardTitle = document.getElementById("card-title");
 let cardMessage = document.getElementById("card-message");
 let popOutEmoji = document.getElementById("pop-out-emoji");
+let floatingEmoji = document.getElementById("floating-emoji");
 let cursor = document.getElementById("cursor");
 let switchBtn = document.getElementById("switch-btn");
 let bgSound = document.getElementById("bg-sound");
@@ -70,6 +70,7 @@ function switchView() {
       cardMessageBg.style.opacity = 1;
       cardMessageBg.style.top = "0px";
       blurElement.style.opacity = 1;
+      showFloatingEmojis();
       printMessage();
     }, 1000);
   } else if (goToView === "title") {
@@ -146,8 +147,8 @@ function showTextBox(applyTo) {
   applyInputTo = applyTo;
 
   switch (applyTo) {
-    case "pop-out-emoji":
-      textInput.value = popOutEmoji.innerHTML;
+    case "floating-emoji":
+      textInput.value = floatingEmoji.innerHTML;
       textInput.placeholder = "Enter an emoji";
       break;
 
@@ -181,11 +182,13 @@ function hideTextBox(action) {
 
   if (
     action == "apply" &&
-    applyInputTo == "pop-out-emoji" &&
-    textInput.value != ""
+    applyInputTo == "floating-emoji"
   ) {
-    //displays the entered emoji in the pop-out-emoji conatiner
+    //stores the entered emoji into the floating-emoji conatiner
+    floatingEmoji.innerHTML = textInput.value;
     popOutEmoji.innerHTML = textInput.value;
+    emoji = textInput.value;
+    showTempFloatingEmojis(5000);
     animatePopOutEmoji();
   } else if (
     action == "apply" &&
@@ -287,12 +290,12 @@ function convertForDivContainer(input) {
   return val;
 }
 
-let popOutEmojiInputBtn = `
+let floatingEmojiInputBtn = `
 <input
 type="button"
 class="input-btn"
-value="Click to add pop-out emoji"
-onclick="showTextBox('pop-out-emoji');"
+value="Click to add floating emoji"
+onclick="showTextBox('floating-emoji');"
 />`;
 
 let titleInputBtn = `
@@ -740,7 +743,8 @@ function showSelectedMusic() {
 
 //plays the sound in the background
 function playBgSound() {
-  if (soundState == "stopped" && bgSound.source != "#") {
+  let selectedMusic = document.getElementById("set-music").innerHTML;
+  if (soundState == "stopped" && selectedMusic != "Select") {
     soundState = "playing";
     bgSound.currentTime = 0;
     bgSound.play();
@@ -749,6 +753,7 @@ function playBgSound() {
   switchBtn.style.border = "2.5px solid gray";
 }
 function stopBgSound() {
+  let selectedMusic = document.getElementById("set-music").innerHTML;
   if (soundState === "playing") {
     bgSound.pause();
     soundState = "stopped";
@@ -764,6 +769,7 @@ let backBtn = document.getElementById("back-btn");
 let nextBtn = document.getElementById("next-btn");
 let cardControls = document.getElementById("card-controls");
 let stageValue = -1;
+let testing = true;
 
 function nextStage() {
   if (stageValue < 5) {
@@ -794,7 +800,7 @@ function changeStage() {
       designStageControls.style.display = "block";
       designBox.innerHTML = `
       <b class="design-stage-title">Title Text</b><br />
-      ${popOutEmojiInputBtn}<br><br>
+      ${floatingEmojiInputBtn}<br><br>
       ${titleInputBtn}<br><br>
       ${fontComponent}<br>
       `;
@@ -835,6 +841,7 @@ function changeStage() {
         <b class="design-stage-title">Background Music</b>
         ${musicComponent}<br>
         `;
+      testing = true;
       showSelectedMusic();
       break;
 
@@ -845,6 +852,8 @@ function changeStage() {
       switchBtn.addEventListener("click", playBgSound);
       soundState = "stopped";
       messagePrinted = false;
+      emojisFloating = false;
+      testing = false;
       cardMessage.innerHTML = "";
       switchBtn.style.animation = "switchBtnAnim 8s linear 0s infinite";
       animatePopOutEmoji();
@@ -967,8 +976,6 @@ function createFile() {
   //   }
   // }
 
-  
-
   function success() {
     showPopUpMessage(`<b>Your card is ready!</b>
 <p>Click <b>Share</b> or copy the link generated to share it with others.<br>
@@ -984,33 +991,32 @@ If you wish to make further changes, click <b>Edit</b>.</p>
         <input type="button" class="design-stage-controls-btn" onclick="hidePopUpMessage();editCard();" value="Okay">
         `);
   }
-  
+
   exeCreate();
 
   async function exeCreate() {
-  const text = docBodyObj;
+    const text = docBodyObj;
 
-  const { data, error } = await supabaseClient
-    .from("cards_table")
-    .insert([{ card_data: text }])
-    .select();
+    const { data, error } = await supabaseClient
+      .from("cards_table")
+      .insert([{ card_data: text }])
+      .select();
 
-  if(error){
-    failed();
-    return;
+    if (error) {
+      failed();
+      return;
+    }
+
+    const id = data[0].id;
+    cardID = id;
+
+    const shareLink = `${window.location.origin}/viewCard.html?id=${id}`;
+    //const shareLink = `${window.location.origin}/viewCard.html?id=${id}`;
+
+    cardLink.innerHTML = `<a href="${shareLink}">${shareLink}</a>`;
+
+    success();
   }
-
-  const id = data[0].id;
-  cardID = id;
-
-  const shareLink = `${window.location.origin}/viewCard.html?id=${id}`;
-  //const shareLink = `${window.location.origin}/viewCard.html?id=${id}`;
-
-  cardLink.innerHTML =
-    `<a href="${shareLink}">${shareLink}</a>`;
-
-  success();
-}
 
   // fetch("createDoc.php", {
   //   method: "POST",
@@ -1061,7 +1067,7 @@ function getStoredCard() {
   if (storedCard !== null) {
     let cardObj = JSON.parse(storedCard);
     let contentContainer = (document.getElementById(
-      "content-container"
+      "content-container",
     ).innerHTML = cardObj.content);
     //reselects elements
     card = document.getElementById("card");
@@ -1084,6 +1090,83 @@ function getStoredCard() {
     switchBtn.addEventListener("click", playBgSound);
   }
 }
+
+//floating emojis logic
+let emoji = "😊";
+const spawnRate = 500;
+let cardPage = document.getElementById("card-page");
+let spawnTimer;
+
+function randomDrift() {
+  return Math.random() * 80 - 40 + "px"; // -40px to +40px
+}
+
+function createEmoji() {
+  const el = document.createElement("div");
+  el.className = "emoji";
+  el.innerText = emoji;
+
+  /* random horizontal start */
+  el.style.left = Math.random() * 100 + "vw";
+
+  /* random size */
+  el.style.fontSize = 20 + Math.random() * 30 + "px";
+
+  /* random animation speed */
+  const duration = 6 + Math.random() * 5;
+  el.style.animationDuration = duration + "s";
+
+  /* drifting values */
+  el.style.setProperty("--drift1", randomDrift());
+  el.style.setProperty("--drift2", randomDrift());
+  el.style.setProperty("--drift3", randomDrift());
+  el.style.setProperty("--drift4", randomDrift());
+
+  cardPage.appendChild(el);
+
+  setTimeout(() => {
+    el.remove();
+  }, duration * 1000);
+}
+
+//spawnTimer = setInterval(createEmoji, spawnRate);
+
+//temporarily shows floating emojis
+function showTempFloatingEmojis(time) {
+  if(emoji == "" || emoji == undefined){
+    console.log("no emoji set")
+    return;
+  }
+  clearInterval(spawnTimer);
+  spawnTimer = setInterval(createEmoji, spawnRate);
+  setTimeout(() => {
+    clearInterval(spawnTimer);
+  }, time);
+}
+
+//shows floating emojis
+let emojisFloating = false;
+let audioDuration = 0;
+function showFloatingEmojis() {
+  let selectedMusic = document.getElementById("set-music").innerHTML
+  if (emojisFloating === true || testing == true) {
+    return;
+  }
+  //show floating emojis for 30 seconds if no background sound was set
+  else if (selectedMusic == "Select") {
+    showTempFloatingEmojis(30000);
+  } else if(selectedMusic != "Select") {
+    audioDuration = bgSound.duration * 1000;
+    showTempFloatingEmojis(audioDuration);
+  }
+
+  emojisFloating = true;
+}
+
+//gets the background sound duration
+bgSound.addEventListener("loadedmetadata", () => {
+      audioDuration = bgSound.duration * 1000;
+    });
 
 onload = getStoredCard();
 adjustPopOutEmoji();

@@ -159,7 +159,7 @@
 
     #card{
       /*adds background image*/
-      background-image: ;
+      background-image: "";
       background-repeat: no-repeat;
       background-attachment: scroll;
       background-position: center;
@@ -404,7 +404,7 @@ font-size: 16px;
     80% {border:2.5px solid pink;}
     90% {border:2.5px solid purple;}
     100% {border:2.5px solid firebrick;}
-    //50% {border:2.5px solid yellow; box-shadow: 0px 1px 2px rgba(255, 255, 0, 1);}
+    /*50% {border:2.5px solid yellow; box-shadow: 0px 1px 2px rgba(255, 255, 0, 1);}*/
     }
 
   .design-stage-controls-btn{
@@ -446,4 +446,41 @@ font-size: 16px;
     border-radius: 6px;
     padding: 8px;
     font-size: 10px;
+}
+
+/* floating emojis styles */
+.emoji{
+    position:fixed;
+    bottom:-40px;
+    pointer-events:none;
+    animation: floatUp linear forwards;
+}
+
+/* floating + drifting animation */
+@keyframes floatUp{
+
+    0%{
+        transform: translate(0,0);
+        opacity:1;
+    }
+
+    25%{
+        transform: translate(var(--drift1), -25vh);
+    }
+
+    50%{
+        transform: translate(var(--drift2), -50vh);
+        opacity:0.8;
+    }
+
+    75%{
+        transform: translate(var(--drift3), -75vh);
+        opacity:0.4;
+    }
+
+    100%{
+        transform: translate(var(--drift4), -110vh);
+        opacity:0;
+    }
+
 }

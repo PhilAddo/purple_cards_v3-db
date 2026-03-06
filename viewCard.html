@@ -53,6 +53,7 @@
     let cardTitle;
     let cardMessage;
     let popOutEmoji;
+    let floatingEmoji;
     let cursor;
     let switchBtn;
     let bgSound;
@@ -149,7 +150,9 @@
 
     //plays the sound in the background
     function playBgSound() {
-        if (soundState == "stopped" && bgSound.src != "music/Select") {
+        let selectedMusic = document.getElementById("set-music").innerHTML;
+        console.log(selectedMusic);
+        if (soundState == "stopped" && selectedMusic != "Select") {
             soundState = "playing";
             bgSound.currentTime = 0;
             bgSound.play();
@@ -190,7 +193,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: cardTitle,
-                    text: 'Click to view messsage',
+                    text: `Click to view messsage - ${cardTile}`,
                     url: window.location.href,
                 })
                     .then(() => console.log('Shared successfully'))
@@ -245,6 +248,84 @@
 `);
     }
 
+
+    //floating emojis logic
+    let emoji = "😊";
+    const spawnRate = 500;
+    let cardPage = document.getElementById("card-page");
+    let spawnTimer;
+
+    function randomDrift() {
+        return Math.random() * 80 - 40 + "px"; // -40px to +40px
+    }
+
+    function createEmoji() {
+        const el = document.createElement("div");
+        el.className = "emoji";
+        el.innerText = emoji;
+
+        /* random horizontal start */
+        el.style.left = Math.random() * 100 + "vw";
+
+        /* random size */
+        el.style.fontSize = 20 + Math.random() * 30 + "px";
+
+        /* random animation speed */
+        const duration = 6 + Math.random() * 5;
+        el.style.animationDuration = duration + "s";
+
+        /* drifting values */
+        el.style.setProperty("--drift1", randomDrift());
+        el.style.setProperty("--drift2", randomDrift());
+        el.style.setProperty("--drift3", randomDrift());
+        el.style.setProperty("--drift4", randomDrift());
+
+        cardPage.appendChild(el);
+
+        setTimeout(() => {
+            el.remove();
+        }, duration * 1000);
+    }
+
+    //spawnTimer = setInterval(createEmoji, spawnRate);
+
+    //temporarily shows floating emojis
+    function showTempFloatingEmojis(time) {
+        if (emoji == "" || emoji == undefined) {
+            console.log("no emoji set")
+            return;
+        }
+        clearInterval(spawnTimer);
+        spawnTimer = setInterval(createEmoji, spawnRate);
+        setTimeout(() => {
+            clearInterval(spawnTimer);
+        }, time);
+    }
+
+    //shows floating emojis
+    let emojisFloating = false;
+    let audioDuration = 0;
+    function showFloatingEmojis() {
+        let selectedMusic = document.getElementById("set-music").innerHTML
+        if (emojisFloating === true || testing == true) {
+            return;
+        }
+        //show floating emojis for 30 seconds if no background sound was set
+        else if (selectedMusic == "Select") {
+            showTempFloatingEmojis(30000);
+        } else if (selectedMusic != "Select") {
+            audioDuration = bgSound.duration * 1000;
+            showTempFloatingEmojis(audioDuration);
+        }
+
+        emojisFloating = true;
+    }
+
+    //gets the background sound duration
+    bgSound.addEventListener("loadedmetadata", () => {
+        audioDuration = bgSound.duration * 1000;
+    });
+
     // get id from URL
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
@@ -267,7 +348,7 @@
         let cardContent = JSON.parse(data.card_data);
 
         contentContainer.innerHTML = cardContent.content;
-        
+
         card = document.getElementById("card");
         blurElement = document.getElementById("blur-element");
         cardTitleBg = document.getElementById("card-title-bg");
@@ -275,12 +356,17 @@
         cardTitle = document.getElementById("card-title");
         cardMessage = document.getElementById("card-message");
         popOutEmoji = document.getElementById("pop-out-emoji");
+        floatingEmoji = document.getElementById("floating-emoji");
         cursor = document.getElementById("cursor");
         switchBtn = document.getElementById("switch-btn");
         bgSound = document.getElementById("bg-sound");
 
         let cardLink = document.getElementById("card-link").innerHTML = `${window.location.origin}/viewCard.html?id=${id}`
         switchBtn.addEventListener("click", playBgSound);
+        //gets the background sound duration
+        bgSound.addEventListener("loadedmetadata", () => {
+            audioDuration = bgSound.duration * 1000;
+        });
         adjustPopOutEmoji(); captureMessage(); selectShareBtn();
     }
 
