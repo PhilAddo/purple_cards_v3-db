@@ -169,6 +169,8 @@
     function captureMessage() {
         message = cardMessage.innerHTML;
         cardMessage.innerHTML = "";
+        //captures the content of the floating emoji element and stores it in the emoji variable
+        emoji = floatingEmoji.innerHTML;
         //applies animation to switch button
         switchBtn.style.animation = "switchBtnAnim 8s linear 0s infinite";
     }
