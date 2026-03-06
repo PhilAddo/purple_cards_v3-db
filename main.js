@@ -1077,6 +1077,7 @@ function getStoredCard() {
     cardTitle = document.getElementById("card-title");
     cardMessage = document.getElementById("card-message");
     popOutEmoji = document.getElementById("pop-out-emoji");
+    floatingEmoji = document.getElementById("floating-emoji");
     cursor = document.getElementById("cursor");
     switchBtn = document.getElementById("switch-btn");
     bgSound = document.getElementById("bg-sound");
@@ -1087,6 +1088,8 @@ function getStoredCard() {
     nextBtn = document.getElementById("next-btn");
     cardControls = document.getElementById("card-controls");
 
+    //captures the content of the floating emoji element and stores it in the emoji variable
+    emoji = floatingEmoji.innerHTML;
     switchBtn.addEventListener("click", playBgSound);
   }
 }
