@@ -33,8 +33,14 @@
         echo "name not set";
     }
     ?> -->
-        Loading...
-    </div>
+    <center>
+        <div id="logoCon">
+            <img src="pc-logo.png" id="logo" alt="logo" />
+        </div>
+        <div style="width: 100%; height: 350px; display: flex; justify-content: center; align-items: center;">
+            Loading card...
+        </div>
+    </center>
     <!-- pop-up container element -->
     <div id="pop-up-container">
 
@@ -343,7 +349,18 @@
             .single();
 
         if (error) {
-            contentContainer.innerHTML = "Sorry, card not found.";
+            contentContainer.innerHTML = `
+        <center>
+        <div id="logoCon">
+            <img src="pc-logo.png" id="logo" alt="logo" />
+        </div>
+        <div style="width: 100%; height: 350px; display: flex; justify-content: center; align-items: center;">
+            <h3>Oops we could not find this card.</h3>
+            <p>It may have been deleted or the ID may be incorrect.</p>
+            <p><a href="index.html">Create a new card.</a></p>
+        </div>
+        </center>
+            `;
             return;
         }
 
